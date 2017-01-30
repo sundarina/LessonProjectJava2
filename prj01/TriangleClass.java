@@ -88,6 +88,5 @@ public class TriangleClass implements Figure {
 	@Override
 	public void display() {
 		System.out.println(this);
-		
 	} 
 }

@@ -31,4 +31,12 @@ public class CcoloredLine extends CLine implements Figure, ColorAble{
 		return "CcoloredLine start: " + super.getStart() + ", end: " + super.getEnd() + ", color: " + getColor();
 	}
 
+	@Override
+	public void display() {
+
+		System.out.println(this);
+
+	}
+
+
 }

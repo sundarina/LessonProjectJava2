@@ -26,7 +26,14 @@ public class ColorTriangle extends TriangleClass implements Figure, ColorAble {
 	public String toString() {
 		return "COLOR Triangle A " + super.getSideAB() + ", B " + super.getSideBC()+ ", C " + super.getSideCA() + " Color: " + color;
 	}
-	
-	
+
+	@Override
+	public void display() {
+
+		System.out.println(this);
+
+	}
+
+
 
 }

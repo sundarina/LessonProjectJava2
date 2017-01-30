@@ -30,7 +30,7 @@ class ColorFigureFabric extends AbstractFigureFabric {
     }
 }
 
-class FigureFabric extends AbstractFigureFabric {
+class SimpleFigureFabric extends AbstractFigureFabric {
 
 
     public Figure rand() {
@@ -63,7 +63,7 @@ public class MainFigures {
 
         //	System.out.println("This Point X = " + ((CPoint) fig).getX());
         //else
-        // fig.display();
+        fig.display();
     }
 
     public static void main(String[] args) {
@@ -117,7 +117,7 @@ public class MainFigures {
 
         for (int i = 0; i < masFig.length; i++) {
             masFig[i] = fabricColorFig.rand();
-           // System.out.print(masFig[i]);
+            // System.out.print(masFig[i]);
             //System.out.print("\n");
         }
 
@@ -132,7 +132,7 @@ public class MainFigures {
         ColorAble[] masColor = new ColorAble[10];
 
         for (Figure figure : masFig) {
-           // System.out.println(figure.toString() + " instatce " + figure.getClass().getName());
+            // System.out.println(figure.toString() + " instatce " + figure.getClass().getName());
             //print(figure);
             if (figure instanceof ColorAble) {
                 //masColor[countColorAble++] = (ColorAble) figure;
@@ -154,6 +154,7 @@ public class MainFigures {
                 masPoint[countPoint++] = (CPoint) figure;
         }
         System.out.print("Hello");
+
     }
 
 }

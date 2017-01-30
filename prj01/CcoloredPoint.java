@@ -1,6 +1,6 @@
 
 
-public class CcoloredPoint extends CPoint implements ColorAble{
+public class CcoloredPoint extends CPoint implements Figure, ColorAble{
 
 	private int color;
 
@@ -31,6 +31,13 @@ public class CcoloredPoint extends CPoint implements ColorAble{
 	@Override
 	public String toString() {
 		return "CcoloredPoint x = " + super.getX() + " y = " + this.getY() + ", color = " + color;
+	}
+
+	@Override
+	public void display() {
+
+		System.out.println(this);
+
 	}
 
 }
