@@ -1,3 +1,9 @@
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 
 abstract class AbstractFigureFabric {
 
@@ -10,7 +16,7 @@ abstract class AbstractFigureFabric {
 class ColorFigureFabric extends AbstractFigureFabric {
 
     public Figure rand() {
-        return getFigure((int) (Math.random() * 2));
+        return getFigure((int) (Math.random() * 3));
     }
 
     /**
@@ -24,17 +30,19 @@ class ColorFigureFabric extends AbstractFigureFabric {
                 return new CcoloredPoint(3, 4, 222222);
             case 1:
                 return new CcoloredLine(4, 5, 6, 7, 555555);
+            case 2:
+                return new ColorTriangle(new CPoint(1, 1), new CPoint(3, 5), new CPoint(6, 1), 678543);
             default:
                 return null;
         }
     }
 }
 
-class SimpleFigureFabric extends AbstractFigureFabric {
+class AllFigureFabric extends AbstractFigureFabric {
 
 
     public Figure rand() {
-        return getFigure((int) (Math.random() * 2));
+        return getFigure((int) (Math.random() * 6));
     }
 
     /**
@@ -45,9 +53,17 @@ class SimpleFigureFabric extends AbstractFigureFabric {
     public Figure getFigure(int n) { //метод, что будет возвращать какуюто фигуру
         switch (n) {
             case 0:
-                return new CPoint(0, 0);
+                return new CPoint(0, (int) (Math.random() * 50));
             case 1:
                 return new CLine(1, 2, 3, 4);
+            case 2:
+                return new CcoloredPoint(3, 4, 222222);
+            case 3:
+                return new CcoloredLine(4, 5, 6, 7, 555555);
+            case 4:
+                return new ColorTriangle(new CPoint(1, 1), new CPoint(3, 5), new CPoint(6, 1), 678843);
+            case 5:
+                return new TriangleClass(new CPoint(3, 5), new CPoint(5, 3), new CPoint(6, 6));
             default:
                 return null;
         }
@@ -55,16 +71,93 @@ class SimpleFigureFabric extends AbstractFigureFabric {
 }
 
 
-public class MainFigures {
+public class MainFigures extends JFrame implements ActionListener, ItemListener {
+
+    JPanel panelCheckBox;
+    JPanel panelFigurePaint;
+    JPanel panelButton;
+
+    JButton rePaint, clear;
+    JCheckBox pointChk, colorPointChk, lineChk, colorLineChk, triangleChk, colorTriangleChk, colorFigireChk;
+
+    public MainFigures() {
+
+
+        panelFigurePaint = new JPanel();
+        panelButton = new JPanel();
+        panelCheckBox = new JPanel();
+        clear = new JButton("Clear");
+
+        pointChk = new JCheckBox("Point");
+        colorPointChk = new JCheckBox("Color Point");
+        lineChk = new JCheckBox("Line");
+        colorLineChk = new JCheckBox("Color Line");
+        triangleChk = new JCheckBox("Triangle");
+        colorTriangleChk = new JCheckBox("Color Triangle");
+        colorFigireChk = new JCheckBox("Color Figure");
+
+        panelCheckBox.setLayout(new GridLayout(1, 7));
+        panelCheckBox.add(pointChk);
+        pointChk.addItemListener(this);
+        panelCheckBox.add(colorPointChk);
+        colorPointChk.addItemListener(this);
+        panelCheckBox.add(lineChk);
+        lineChk.addItemListener(this);
+        panelCheckBox.add(colorLineChk);
+        colorLineChk.addItemListener(this);
+        panelCheckBox.add(triangleChk);
+        triangleChk.addItemListener(this);
+        panelCheckBox.add(colorTriangleChk);
+        colorTriangleChk.addItemListener(this);
+        panelCheckBox.add(colorFigireChk);
+        colorFigireChk.addItemListener(this);
+
+        panelButton.add(clear, new FlowLayout());
+        clear.addActionListener(this);
+
+        add(panelFigurePaint, BorderLayout.CENTER);
+        add(panelButton, BorderLayout.SOUTH);
+        add(panelCheckBox, BorderLayout.NORTH);
+
+        setSize(1000, 400);
+        setVisible(true);
+    }
 
     public static void print(Figure fig) {
-        // if (fig.getClass().getName().equals("CPoint")) // возвращает строку
-        //if (fig instanceof CPoint) // ртти динамическое приведение
-
-        //	System.out.println("This Point X = " + ((CPoint) fig).getX());
-        //else
+//        if (fig.getClass().getName().equals("CPoint")) // возвращает строку
+//            if (fig instanceof CPoint) // ртти динамическое приведение
+//                System.out.println("This Point X = " + ((CPoint) fig).getX());
+//            else
         fig.display();
     }
+
+    @Override
+    public void actionPerformed(ActionEvent actionEvent) {
+        if (actionEvent.getSource() == clear) {
+            pointChk.setSelected(false);
+            colorPointChk.setSelected(false);
+            lineChk.setSelected(false);
+            colorLineChk.setSelected(false);
+            triangleChk.setSelected(false);
+            colorTriangleChk.setSelected(false);
+            colorFigireChk.setSelected(false);
+            panelCheckBox.repaint();
+        }
+    }
+
+    @Override
+    public void itemStateChanged(ItemEvent itemEvent) {
+        boolean visible = false;
+        if (itemEvent.getStateChange() == ItemEvent.DESELECTED)
+            visible = false;
+        else visible= true;
+        if(itemEvent.getItemSelectable() == pointChk) {
+            //object.setVisible(visible);
+        } else if(itemEvent.getItemSelectable() == ) {
+            
+        }
+    }
+
 
     public static void main(String[] args) {
 
@@ -104,6 +197,10 @@ public class MainFigures {
         TriangleClass triangle3 = new TriangleClass(point1, point2, new CPoint(3, 3));
         triangle3.lengthAB();
 
+        //////////////////////////////////////////////////////////////////////////////////////
+
+        AbstractFigureFabric simpleFigureFabric = new AllFigureFabric();
+
         Figure[] masFig = new Figure[10]; /*
                                              * обьединение под общим
 											 * интерфейсом, каждый из обьектов
@@ -113,48 +210,66 @@ public class MainFigures {
 											 * реализов метод
 											 */
 
-        AbstractFigureFabric fabricColorFig = new ColorFigureFabric();
 
         for (int i = 0; i < masFig.length; i++) {
-            masFig[i] = fabricColorFig.rand();
-            // System.out.print(masFig[i]);
-            //System.out.print("\n");
+            masFig[i] = simpleFigureFabric.rand();
+            System.out.print(masFig[i]);
+            System.out.print("\n");
         }
 
-        System.out.print("");
+        System.out.print("\n");
 
 //		masCPoint[0] = ccp1; // реализация полиморфизма. ссылка и родительского
 //								// класса, засовывать можно и этот класс и
 //								// потомкка
 
-        int countColorAble = 0;
-
-        ColorAble[] masColor = new ColorAble[10];
-
-        for (Figure figure : masFig) {
-            // System.out.println(figure.toString() + " instatce " + figure.getClass().getName());
-            //print(figure);
-            if (figure instanceof ColorAble) {
-                //masColor[countColorAble++] = (ColorAble) figure;
-                countColorAble++;
-            }
-        }
-
-        System.out.print(countColorAble);
-
-        //	masColor[0] = new CcoloredPoint(colorPoint2, 23456);
-        //	masColor[1] = new CcoloredLine(ccp1, ccp2, 485857);
-        //	masColor[2] = ccp3;
 
         int countPoint = 0;
         CPoint[] masPoint = new CPoint[10];
         for (Figure figure : masFig) {
-            System.out.println(figure.toString() + " instatce " + figure.getClass().getName());
-            if (figure instanceof CPoint)
+            //  System.out.println(figure.toString() + " instatce " + figure.getClass().getName());
+            if (figure instanceof CPoint) {
                 masPoint[countPoint++] = (CPoint) figure;
+                print(figure);
+            }
         }
-        System.out.print("Hello");
+        System.out.print("\n");
 
+        int countLine = 0;
+        CLine[] masLines = new CLine[10];
+        for (Figure figure : masFig) {
+            if (figure instanceof CLine) {
+                masLines[countLine] = (CLine) figure;
+                print(figure);
+            }
+        }
+        System.out.print("\n");
+
+        int countTriangle = 0;
+        TriangleClass[] masTri = new TriangleClass[10];
+        for (Figure figure : masFig) {
+            if (figure instanceof TriangleClass) {
+                masTri[countTriangle] = (TriangleClass) figure;
+                print(figure);
+            }
+        }
+        System.out.print("\n");
+
+
+        int countColorAble = 0;
+        ColorAble[] masColor = new ColorAble[10];
+        for (Figure figure : masFig) {
+            // System.out.println(figure.toString() + " instatce " + figure.getClass().getName());
+            //print(figure);
+            if (figure instanceof ColorAble) {
+                masColor[countColorAble++] = (ColorAble) figure;
+                print(figure);
+            }
+        }
+        System.out.print("\n");
+
+        MainFigures mainFigures = new MainFigures();
     }
+
 
 }

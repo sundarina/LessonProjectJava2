@@ -44,7 +44,7 @@ public class CLine implements Figure {
 
     @Override
     public String toString() {
-        return "CLine [start=" + start + ", end=" + end + "]";
+        return "CLine [start = " + start + ", end = " + end + "]";
     }
 
     // @Override
@@ -58,10 +58,6 @@ public class CLine implements Figure {
 
     @Override
     public void display() {
-
         System.out.println(this);
-
     }
-
-
 }
