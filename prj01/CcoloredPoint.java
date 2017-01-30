@@ -2,34 +2,60 @@
 
 public class CcoloredPoint extends CPoint implements Figure, ColorAble {
 
-    private int color;
+    private int[] color = new int[3];
+
 
     //private CPoint localpoint;
 
-    public CcoloredPoint(int x, int y, int color) {
+    public CcoloredPoint(int x, int y, int[] color) {
         super(x, y);
-        this.color = color;
+        for (int i = 0; i < color.length; i++) {
+            this.color[i] = color[i];
+        }
     }
 
-    public CcoloredPoint(CPoint point, int color) {
+    public CcoloredPoint(CPoint point, int[] color) {
         //super(point.getX(), point.getY()); //извлекаем с родителя
         super(point);
         //	localpoint = point; //треб констр родительского класса
-        this.color = color;
+        for (int i = 0; i < color.length; i++) {
+            this.color[i] = color[i];
+        }
     }
 
 
-    public int getColor() {
-        return color;
+    public int getColorR() {
+            return color[0];
     }
 
-    public void setColor(int color) {
-        this.color = color;
+    public int getColorG() {
+        return color[1];
+    }
+
+    public int getColorB() {
+        return color[2];
+    }
+
+    public void setColor(int[] color) {
+
+        for (int i = 0; i < color.length; i++) {
+            this.color[i] = color[i];
+        }
     }
 
     @Override
     public String toString() {
-        return "COLOR Point x = " + super.getX() + " y = " + this.getY() + ", color = " + color;
+        int c1 = 0;
+        int c2 = 0;
+        int c3 = 0;
+
+        for (int i = 0; i < color.length; i++) {
+            c1 = color[0];
+            c2 = color[1];
+            c3 = color[2];
+        }
+            return "COLOR Point x = " + super.getX() + " y = " + this.getY() + ", color(" + c1 + ", " + c2 + ", " + c3 + ")" ;
+
     }
 
     @Override

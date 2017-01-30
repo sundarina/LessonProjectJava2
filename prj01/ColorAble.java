@@ -1,4 +1,6 @@
 
 public interface ColorAble {
-	int getColor();
+	int getColorR();
+	int getColorG();
+	int getColorB();
 }
