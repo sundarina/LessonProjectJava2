@@ -6,6 +6,7 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
+import java.lang.NullPointerException;
 
 abstract class AbstractFigureFabric {
 
@@ -26,7 +27,7 @@ class ColorFigureFabric extends AbstractFigureFabric {
     public int[] randColor() {
         int[] r = new int[3];
         for (int i = 0; i < r.length; i++) {
-            r[i] = (int)(Math.random()*255);
+            r[i] = (int) (Math.random() * 255);
         }
         return r;
     }
@@ -65,7 +66,7 @@ class AllFigureFabric extends AbstractFigureFabric {
     public int[] randColor() {
         int[] r = new int[3];
         for (int i = 0; i < r.length; i++) {
-            r[i] = (int)(Math.random()*255);
+            r[i] = (int) (Math.random() * 255);
         }
         return r;
     }
@@ -83,7 +84,7 @@ class AllFigureFabric extends AbstractFigureFabric {
             case 4:
                 return new ColorTriangle(new CPoint((int) (Math.random() * 250), (int) (Math.random() * 800)), new CPoint((int) (Math.random() * 250), (int) (Math.random() * 800)), new CPoint((int) (Math.random() * 250), (int) (Math.random() * 800)), this.randColor());
             case 5:
-                return new TriangleClass(new CPoint((int) (Math.random() * 250), (int) (Math.random() * 800)), new CPoint((int) (Math.random() * 250), (int) (Math.random() * 800)), new CPoint((int) (Math.random() * 250), (int) (Math.random() * 800)));
+                return new TriangleClass(new CPoint((int) (Math.random() * 50), (int) (Math.random() * 800)), new CPoint((int) (Math.random() * 50), (int) (Math.random() * 800)), new CPoint((int) (Math.random() * 50), (int) (Math.random() * 800)));
             default:
                 return null;
         }
@@ -107,7 +108,7 @@ public class MainFigures extends JFrame implements ActionListener, ItemListener 
 
         AbstractFigureFabric simpleFigureFabric = new AllFigureFabric();
 
-        Figure[] masFig = new Figure[10]; /*
+        Figure[] masFig = new Figure[20]; /*
                                              * обьединение под общим
 											 * интерфейсом, каждый из обьектов
 											 * содержит метод, описаный в
@@ -119,8 +120,8 @@ public class MainFigures extends JFrame implements ActionListener, ItemListener 
 
         for (int i = 0; i < masFig.length; i++) {
             masFig[i] = simpleFigureFabric.rand();
-            //  System.out.print(masFig[i]);
-            //  System.out.print("\n");
+            System.out.print(masFig[i]);
+            System.out.print("\n");
         }
 
 
@@ -130,7 +131,7 @@ public class MainFigures extends JFrame implements ActionListener, ItemListener 
 
 
         int countPoint = 0;
-        CPoint[] masPoint = new CPoint[10];
+        CPoint[] masPoint = new CPoint[masFig.length];
         for (Figure figure : masFig) {
             //  System.out.println(figure.toString() + " instatce " + figure.getClass().getName());
             if (figure instanceof CPoint) {
@@ -140,7 +141,7 @@ public class MainFigures extends JFrame implements ActionListener, ItemListener 
         }
 
         int countLine = 0;
-        CLine[] masLines = new CLine[10];
+        CLine[] masLines = new CLine[masFig.length];
         for (Figure figure : masFig) {
             if (figure instanceof CLine) {
                 masLines[countLine++] = (CLine) figure;
@@ -149,7 +150,7 @@ public class MainFigures extends JFrame implements ActionListener, ItemListener 
         }
 
         int countTriangle = 0;
-        TriangleClass[] masTri = new TriangleClass[10];
+        TriangleClass[] masTri = new TriangleClass[masFig.length];
         for (Figure figure : masFig) {
             if (figure instanceof TriangleClass) {
                 masTri[countTriangle++] = (TriangleClass) figure;
@@ -158,7 +159,7 @@ public class MainFigures extends JFrame implements ActionListener, ItemListener 
         }
 
         int countColorAble = 0;
-        ColorAble[] masColor = new ColorAble[10];
+        ColorAble[] masColor = new ColorAble[masFig.length];
         for (Figure figure : masFig) {
             // System.out.println(figure.toString() + " instatce " + figure.getClass().getName());
             //print(figure);
@@ -172,17 +173,56 @@ public class MainFigures extends JFrame implements ActionListener, ItemListener 
         final int cl = countLine;
         final int ct = countTriangle;
         final int cc = countColorAble;
+
+
         panelFigurePaint = new JPanel() {
             public void paint(Graphics g) {
+
+                //как исключить наследников?????
                 for (int i = 0; i < cp; i++) {
-                    g.fillOval(masPoint[i].getX(), masPoint[i].getY(), 5, 5);
+                    if (masPoint[i].getClass().getName() == "CPoint") {
+                        g.setColor(Color.BLACK);
+                        if (masPoint[i] != null)
+                            g.fillOval(masPoint[i].getX(), masPoint[i].getY(), 5, 5);
+                    }
                 }
 
                 for (int i = 0; i < cl; i++) {
-                    g.drawLine(masLines[i].getStart().getX(), masLines[i].getStart().getY(), masLines[i].getEnd().getX(), masLines[i].getEnd().getY());
+                    if (masLines[i].getClass().getName() == "CLine") {
+                        g.setColor(Color.BLACK);
+                        if (masLines[i] != null)
+                            g.drawLine(masLines[i].getStart().getX(), masLines[i].getStart().getY(), masLines[i].getEnd().getX(), masLines[i].getEnd().getY());
+                    }
+                }
+
+                for (int i = 0; i < ct; i++) {
+                    if (masTri[i].getClass().getName() == "TriangleClass") {
+                        g.setColor(Color.BLACK);
+                        if (masTri[i] != null)
+                            g.drawPolygon(new int[]{masTri[i].getApexA().getX(), masTri[i].getApexB().getX(), masTri[i].getApexC().getX()}, new int[]{masTri[i].getApexA().getY(), masTri[i].getApexB().getY(), masTri[i].getApexC().getY()}, 3);
+                    }
+                }
+
+                for (int i = 0; i < cc; i++) {
+                    if (masColor[i].getClass().getName() == "CcoloredPoint") {
+                        g.setColor(new Color(masColor[i].getColorR(), masColor[i].getColorG(), masColor[i].getColorB()));
+                        if (masPoint[i] != null)
+                            g.fillOval(masPoint[i].getX(), masPoint[i].getY(), 5, 5);
+                    }
+
+                    if (masColor[i].getClass().getName() == "CcoloredLine") {
+                        g.setColor(new Color(masColor[i].getColorR(), masColor[i].getColorG(), masColor[i].getColorB()));
+                        if (masLines[i] != null)
+                            g.drawLine(masLines[i].getStart().getX(), masLines[i].getStart().getY(), masLines[i].getEnd().getX(), masLines[i].getEnd().getY());
+                    }
+
+                    if (masColor[i].getClass().getName() == "ColorTriangle") {
+                        g.setColor(new Color(masColor[i].getColorR(), masColor[i].getColorG(), masColor[i].getColorB()));
+                        if (masTri[i] != null)
+                            g.drawPolygon(new int[]{masTri[i].getApexA().getX(), masTri[i].getApexB().getX(), masTri[i].getApexC().getX()}, new int[]{masTri[i].getApexA().getY(), masTri[i].getApexB().getY(), masTri[i].getApexC().getY()}, 3);
+                    }
                 }
             }
-
         };
 
         panelButton = new JPanel();
@@ -220,7 +260,7 @@ public class MainFigures extends JFrame implements ActionListener, ItemListener 
         add(panelButton, BorderLayout.SOUTH);
         add(panelCheckBox, BorderLayout.NORTH);
 
-        setSize(1000, 400);
+        setSize(1000, 1000);
         setVisible(true);
     }
 
@@ -256,69 +296,47 @@ public class MainFigures extends JFrame implements ActionListener, ItemListener 
         //удалить else
 
         if (itemEvent.getItemSelectable() == pointChk) {
-            //object.setVisible(visible);
-<<<<<<< HEAD
-=======
-        } else if (itemEvent.getItemSelectable() == colorPointChk) {
-
-        } else if (itemEvent.getItemSelectable() == lineChk) {
-
-        } else if (itemEvent.getItemSelectable() == colorLineChk) {
-
-        } else if (itemEvent.getItemSelectable() == triangleChk) {
-
-        } else if (itemEvent.getItemSelectable() == colorTriangleChk) {
-
-        } else if (itemEvent.getItemSelectable() == colorFigireChk) {
-
->>>>>>> 253e53eb5c8c1f19c9e3fa606da97ad714382305
         }
 
+        if (itemEvent.getItemSelectable() == colorPointChk) {
 
+        }
+
+        if (itemEvent.getItemSelectable() == lineChk) {
+
+        }
+
+        if (itemEvent.getItemSelectable() == colorLineChk) {
+
+        }
+
+        if (itemEvent.getItemSelectable() == triangleChk) {
+
+        }
+
+        if (itemEvent.getItemSelectable() == colorTriangleChk) {
+
+        }
+        if (itemEvent.getItemSelectable() == colorFigireChk) {
+
+        }
     }
-
 
     public static void main(String[] args) {
-
-        CPoint point1 = new CPoint(0, 0);
-        CPoint point2 = new CPoint(1, 1);
-        CPoint point3 = new CPoint(6, 6);
-
-
-        // cсылка храниться в стеке Stack, экземпляр храниться в HEAP (куче)
-        //	System.out.println(cp1); // автовызов метода toString()
-
-//
-//        CcoloredPoint colorPoint = new CcoloredPoint(point1, 123456);
-//        CcoloredPoint colorPoint1 = new CcoloredPoint(1, 1, 333333);
-//        CcoloredPoint colorPoint2 = new CcoloredPoint(point1, 222222);
-//        CcoloredPoint colorPoint3 = new CcoloredPoint(new CPoint(1, 2), 444444);
-
-        CLine line1 = new CLine(1, 1, 2, 2); // композиция
-        CLine line2 = new CLine(point1, point2);
-        CLine line3 = new CLine(new CPoint(3, 3), new CPoint(4, 4));
-        /*
-         * формально - по ссылке, по выделению памяти и жизни - то удалиться
-		 * вместе с линией
-		 */
-
-//        CcoloredLine colorLine1 = new CcoloredLine(line1, 555555);
-//        CcoloredLine colorLine2 = new CcoloredLine(point1, point2, 398948);
-//        CcoloredLine colorLine3 = new CcoloredLine(new CcoloredPoint(point3, 77777), new CcoloredPoint(3, 3, 666666), 898891);
-
-//        TriangleClass triangle1 = new TriangleClass(point1, new CPoint(3, 4), new CPoint(point3));
-//        TriangleClass triangle2 = new TriangleClass(line1, line2, colorLine2);
-//        ColorTriangle colorTriangle1 = new ColorTriangle(line2, new CLine(line1.getStart(), line3.getEnd()), line1, colorLine1.getColor());
-//        ColorTriangle colorTriangle2 = new ColorTriangle(colorTriangle1.getSideAB(), colorTriangle1.getSideBC(), colorTriangle1.getSideCA(),
-//                colorPoint3.getColor());
-
-        TriangleClass triangle3 = new TriangleClass(point1, point2, new CPoint(3, 3));
-        triangle3.lengthAB();
-
-        //////////////////////////////////////////////////////////////////////////////////////
-
         MainFigures mainFigures = new MainFigures();
     }
-
-
 }
+
+/**    ссылка храниться в стеке Stack, экземпляр храниться в HEAP (куче)
+ 	System.out.println(cp1); // автовызов метода toString()
+
+ CLine line1 = new CLine(1, 1, 2, 2); // композиция
+
+ Line l = new Line( new CPoint(3, 3), point2);
+ new CPoint(3,3)
+ формально - значение передаеться по ссылке, по выделению памяти и жизни - то удалиться вместе с линией
+
+
+ TriangleClass triangle3 = new TriangleClass(point1, point2, new CPoint(3, 3));
+        triangle3.lengthAB();
+ */
