@@ -153,9 +153,9 @@ public class MainFigures extends JFrame implements ActionListener, ItemListener 
         else visible= true;
         if(itemEvent.getItemSelectable() == pointChk) {
             //object.setVisible(visible);
-        } else if(itemEvent.getItemSelectable() == ) {
-            
         }
+
+
     }
 
 
