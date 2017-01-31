@@ -1,30 +1,44 @@
 
 public class ColorTriangle extends TriangleClass implements Figure, ColorAble {
 
-    private int color;
+    private int[] color = new int[3];
 
-    public ColorTriangle(CLine ab, CLine bc, CLine ca, int color) {
+    public ColorTriangle(CLine ab, CLine bc, CLine ca, int[] color) {
         super(ab, bc, ca);
-        this.color = color;
+        for (int i = 0; i < color.length; i++) {
+            this.color[i] = color[i];
+        }
     }
 
-    public ColorTriangle(CPoint apexA, CPoint apexB, CPoint apexC, int color) {
+    public ColorTriangle(CPoint apexA, CPoint apexB, CPoint apexC, int[] color) {
         super(apexA, apexB, apexC);
-        this.color = color;
+        for (int i = 0; i < color.length; i++) {
+            this.color[i] = color[i];
+        }
 
     }
 
-    public int getColor() {
-        return color;
+    public int getColorR() {
+        return color[0];
     }
 
-    public void setColor(int color) {
-        this.color = color;
+    public int getColorG() {
+        return color[1];
+    }
+
+    public int getColorB() {
+        return color[2];
+    }
+
+    public void setColor(int[] color) {
+        for (int i = 0; i < color.length; i++) {
+            this.color[i] = color[i];
+        }
     }
 
     @Override
     public String toString() {
-        return "COLOR Triangle A " + super.getSideAB() + ", B " + super.getSideBC() + ", C " + super.getSideCA() + " Color: " + color;
+        return "COLOR Triangle A " + super.getSideAB() + ", B " + super.getSideBC() + ", C " + super.getSideCA() + ", color(" + getColorR() + ", " + getColorG() + ", " + getColorB() + ")";
     }
 
     @Override
