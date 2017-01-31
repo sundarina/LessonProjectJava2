@@ -101,6 +101,13 @@ public class MainFigures extends JFrame implements ActionListener, ItemListener 
     JButton rePaint, clear;
     JCheckBox pointChk, colorPointChk, lineChk, colorLineChk, triangleChk, colorTriangleChk, colorFigireChk;
 
+    Figure[] masFig;
+    CPoint[] masPoint;
+    CLine[] masLines;
+    TriangleClass[] masTri;
+    ColorAble[] masColor;
+
+
     public MainFigures() {
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -108,7 +115,7 @@ public class MainFigures extends JFrame implements ActionListener, ItemListener 
 
         AbstractFigureFabric simpleFigureFabric = new AllFigureFabric();
 
-        Figure[] masFig = new Figure[20]; /*
+        masFig = new Figure[20]; /*
                                              * обьединение под общим
 											 * интерфейсом, каждый из обьектов
 											 * содержит метод, описаный в
@@ -131,7 +138,7 @@ public class MainFigures extends JFrame implements ActionListener, ItemListener 
 
 
         int countPoint = 0;
-        CPoint[] masPoint = new CPoint[masFig.length];
+        masPoint = new CPoint[masFig.length];
         for (Figure figure : masFig) {
             //  System.out.println(figure.toString() + " instatce " + figure.getClass().getName());
             if (figure instanceof CPoint) {
@@ -141,7 +148,7 @@ public class MainFigures extends JFrame implements ActionListener, ItemListener 
         }
 
         int countLine = 0;
-        CLine[] masLines = new CLine[masFig.length];
+        masLines = new CLine[masFig.length];
         for (Figure figure : masFig) {
             if (figure instanceof CLine) {
                 masLines[countLine++] = (CLine) figure;
@@ -150,7 +157,7 @@ public class MainFigures extends JFrame implements ActionListener, ItemListener 
         }
 
         int countTriangle = 0;
-        TriangleClass[] masTri = new TriangleClass[masFig.length];
+        masTri = new TriangleClass[masFig.length];
         for (Figure figure : masFig) {
             if (figure instanceof TriangleClass) {
                 masTri[countTriangle++] = (TriangleClass) figure;
@@ -159,7 +166,7 @@ public class MainFigures extends JFrame implements ActionListener, ItemListener 
         }
 
         int countColorAble = 0;
-        ColorAble[] masColor = new ColorAble[masFig.length];
+        masColor = new ColorAble[masFig.length];
         for (Figure figure : masFig) {
             // System.out.println(figure.toString() + " instatce " + figure.getClass().getName());
             //print(figure);
@@ -174,55 +181,6 @@ public class MainFigures extends JFrame implements ActionListener, ItemListener 
         final int ct = countTriangle;
         final int cc = countColorAble;
 
-
-        panelFigurePaint = new JPanel() {
-            public void paint(Graphics g) {
-                
-                for (int i = 0; i < cp; i++) {
-                    if (masPoint[i].getClass().getName() == "CPoint") {
-                        g.setColor(Color.BLACK);
-                        if (masPoint[i] != null)
-                            g.fillOval(masPoint[i].getX(), masPoint[i].getY(), 5, 5);
-                    }
-                }
-
-                for (int i = 0; i < cl; i++) {
-                    if (masLines[i].getClass().getName() == "CLine") {
-                        g.setColor(Color.BLACK);
-                        if (masLines[i] != null)
-                            g.drawLine(masLines[i].getStart().getX(), masLines[i].getStart().getY(), masLines[i].getEnd().getX(), masLines[i].getEnd().getY());
-                    }
-                }
-
-                for (int i = 0; i < ct; i++) {
-                    if (masTri[i].getClass().getName() == "TriangleClass") {
-                        g.setColor(Color.BLACK);
-                        if (masTri[i] != null)
-                            g.drawPolygon(new int[]{masTri[i].getApexA().getX(), masTri[i].getApexB().getX(), masTri[i].getApexC().getX()}, new int[]{masTri[i].getApexA().getY(), masTri[i].getApexB().getY(), masTri[i].getApexC().getY()}, 3);
-                    }
-                }
-
-                for (int i = 0; i < cc; i++) {
-                    if (masColor[i].getClass().getName() == "CcoloredPoint") {
-                        g.setColor(new Color(masColor[i].getColorR(), masColor[i].getColorG(), masColor[i].getColorB()));
-                        if (masPoint[i] != null)
-                            g.fillOval(masPoint[i].getX(), masPoint[i].getY(), 5, 5);
-                    }
-
-                    if (masColor[i].getClass().getName() == "CcoloredLine") {
-                        g.setColor(new Color(masColor[i].getColorR(), masColor[i].getColorG(), masColor[i].getColorB()));
-                        if (masLines[i] != null)
-                            g.drawLine(masLines[i].getStart().getX(), masLines[i].getStart().getY(), masLines[i].getEnd().getX(), masLines[i].getEnd().getY());
-                    }
-
-                    if (masColor[i].getClass().getName() == "ColorTriangle") {
-                        g.setColor(new Color(masColor[i].getColorR(), masColor[i].getColorG(), masColor[i].getColorB()));
-                        if (masTri[i] != null)
-                            g.drawPolygon(new int[]{masTri[i].getApexA().getX(), masTri[i].getApexB().getX(), masTri[i].getApexC().getX()}, new int[]{masTri[i].getApexA().getY(), masTri[i].getApexB().getY(), masTri[i].getApexC().getY()}, 3);
-                    }
-                }
-            }
-        };
 
         panelButton = new JPanel();
         panelCheckBox = new JPanel();
@@ -252,6 +210,69 @@ public class MainFigures extends JFrame implements ActionListener, ItemListener 
         panelCheckBox.add(colorFigireChk);
         colorFigireChk.addItemListener(this);
 
+        panelFigurePaint = new JPanel() {
+            public void paint(Graphics g) {
+
+                if (pointChk.isSelected()) {
+                    for (int i = 0; i < cp; i++) {
+                        if (masPoint[i].getClass().getName() == "CPoint") {
+                            g.setColor(Color.BLACK);
+                            if (masPoint[i] != null)
+                                g.fillOval(masPoint[i].getX(), masPoint[i].getY(), 5, 5);
+                        }
+                    }
+                }
+
+                if (lineChk.isSelected()) {
+                    for (int i = 0; i < cl; i++) {
+                        if (masLines[i].getClass().getName() == "CLine") {
+                            g.setColor(Color.BLACK);
+                            if (masLines[i] != null)
+                                g.drawLine(masLines[i].getStart().getX(), masLines[i].getStart().getY(), masLines[i].getEnd().getX(), masLines[i].getEnd().getY());
+                        }
+                    }
+                }
+
+                if (triangleChk.isSelected()) {
+                    for (int i = 0; i < ct; i++) {
+                        if (masTri[i].getClass().getName() == "TriangleClass") {
+                            g.setColor(Color.BLACK);
+                            if (masTri[i] != null)
+                                g.drawPolygon(new int[]{masTri[i].getApexA().getX(), masTri[i].getApexB().getX(), masTri[i].getApexC().getX()}, new int[]{masTri[i].getApexA().getY(), masTri[i].getApexB().getY(), masTri[i].getApexC().getY()}, 3);
+                        }
+                    }
+                }
+
+                for (int i = 0; i < cc; i++) {
+                    if (colorPointChk.isSelected()) {
+                        if (masColor[i].getClass().getName() == "CcoloredPoint") {
+                            g.setColor(new Color(masColor[i].getColorR(), masColor[i].getColorG(), masColor[i].getColorB()));
+                            if (masPoint[i] != null)
+                                g.fillOval(masPoint[i].getX(), masPoint[i].getY(), 5, 5);
+                        }
+                    }
+
+                    if (colorLineChk.isSelected()) {
+                        if (masColor[i].getClass().getName() == "CcoloredLine") {
+                            g.setColor(new Color(masColor[i].getColorR(), masColor[i].getColorG(), masColor[i].getColorB()));
+                            if (masLines[i] != null)
+                                g.drawLine(masLines[i].getStart().getX(), masLines[i].getStart().getY(), masLines[i].getEnd().getX(), masLines[i].getEnd().getY());
+                        }
+                    }
+
+                    if (colorTriangleChk.isSelected()) {
+
+                        if (masColor[i].getClass().getName() == "ColorTriangle") {
+                            g.setColor(new Color(masColor[i].getColorR(), masColor[i].getColorG(), masColor[i].getColorB()));
+                            if (masTri[i] != null)
+                                g.drawPolygon(new int[]{masTri[i].getApexA().getX(), masTri[i].getApexB().getX(), masTri[i].getApexC().getX()}, new int[]{masTri[i].getApexA().getY(), masTri[i].getApexB().getY(), masTri[i].getApexC().getY()}, 3);
+                        }
+                    }
+                }
+            }
+        };
+
+
         panelButton.add(clear, new FlowLayout());
         clear.addActionListener(this);
 
@@ -260,6 +281,7 @@ public class MainFigures extends JFrame implements ActionListener, ItemListener 
         add(panelCheckBox, BorderLayout.NORTH);
 
         setSize(1000, 1000);
+        panelFigurePaint.setVisible(false);
         setVisible(true);
     }
 
@@ -287,55 +309,74 @@ public class MainFigures extends JFrame implements ActionListener, ItemListener 
 
     @Override
     public void itemStateChanged(ItemEvent itemEvent) {
-        boolean visible = false;
-        if (itemEvent.getStateChange() == ItemEvent.DESELECTED)
-            visible = false;
-        else visible = true;
+        boolean visible = true;
 
-        //удалить else
+        if (itemEvent.getStateChange() == ItemEvent.DESELECTED) {
+            visible = false;
+        } else {
+            visible = true;
+        }
+
 
         if (itemEvent.getItemSelectable() == pointChk) {
+            pointChk.setVisible(true);
+            panelFigurePaint.setVisible(visible);
+            panelFigurePaint.repaint();
         }
 
         if (itemEvent.getItemSelectable() == colorPointChk) {
-
+            panelFigurePaint.setVisible(visible);
+            panelFigurePaint.repaint();
         }
 
         if (itemEvent.getItemSelectable() == lineChk) {
-
+            panelFigurePaint.setVisible(visible);
+            panelFigurePaint.repaint();
         }
 
         if (itemEvent.getItemSelectable() == colorLineChk) {
-
+            panelFigurePaint.setVisible(visible);
+            panelFigurePaint.repaint();
         }
 
         if (itemEvent.getItemSelectable() == triangleChk) {
-
+            panelFigurePaint.setVisible(visible);
+            panelFigurePaint.repaint();
         }
 
         if (itemEvent.getItemSelectable() == colorTriangleChk) {
-
+            panelFigurePaint.setVisible(visible);
+            panelFigurePaint.repaint();
         }
         if (itemEvent.getItemSelectable() == colorFigireChk) {
-
+            panelFigurePaint.setVisible(visible);
+            panelFigurePaint.repaint();
         }
     }
 
+
     public static void main(String[] args) {
-        MainFigures mainFigures = new MainFigures();
+        // MainFigures mainFigures = new MainFigures();
+
+        EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new MainFigures();
+            }
+        });
     }
 }
 
-/**    ссылка храниться в стеке Stack, экземпляр храниться в HEAP (куче)
- 	System.out.println(cp1); // автовызов метода toString()
-
- CLine line1 = new CLine(1, 1, 2, 2); // композиция
-
- Line l = new Line( new CPoint(3, 3), point2);
- new CPoint(3,3)
- формально - значение передаеться по ссылке, по выделению памяти и жизни - то удалиться вместе с линией
-
-
- TriangleClass triangle3 = new TriangleClass(point1, point2, new CPoint(3, 3));
-        triangle3.lengthAB();
+/**
+ * ссылка храниться в стеке Stack, экземпляр храниться в HEAP (куче)
+ * System.out.println(cp1); // автовызов метода toString()
+ * <p>
+ * CLine line1 = new CLine(1, 1, 2, 2); // композиция
+ * <p>
+ * Line l = new Line( new CPoint(3, 3), point2);
+ * new CPoint(3,3)
+ * формально - значение передаеться по ссылке, по выделению памяти и жизни - то удалиться вместе с линией
+ * <p>
+ * <p>
+ * TriangleClass triangle3 = new TriangleClass(point1, point2, new CPoint(3, 3));
+ * triangle3.lengthAB();
  */
