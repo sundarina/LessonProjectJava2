@@ -177,8 +177,7 @@ public class MainFigures extends JFrame implements ActionListener, ItemListener 
 
         panelFigurePaint = new JPanel() {
             public void paint(Graphics g) {
-
-                //как исключить наследников?????
+                
                 for (int i = 0; i < cp; i++) {
                     if (masPoint[i].getClass().getName() == "CPoint") {
                         g.setColor(Color.BLACK);
