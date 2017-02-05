@@ -4,9 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.awt.geom.Line2D;
-import java.awt.geom.Point2D;
-import java.lang.NullPointerException;
+import java.io.*;
 
 abstract class AbstractFigureFabric {
 
@@ -94,6 +92,9 @@ class AllFigureFabric extends AbstractFigureFabric {
 
 public class MainFigures extends JFrame implements ActionListener, ItemListener {
 
+
+    String path = "res" + File.separator + "source.txt";
+
     JPanel panelCheckBox;
     JPanel panelFigurePaint;
     JPanel panelButton;
@@ -107,8 +108,13 @@ public class MainFigures extends JFrame implements ActionListener, ItemListener 
     TriangleClass[] masTri;
     ColorAble[] masColor;
 
+    FileInputStream fileInputStreamX = null;
+    FileInputStream fileInputStreamY = null;
+    FileOutputStream fileOutputStreamY = null;
+    FileOutputStream fileOutputStreamX = null;
 
-    public MainFigures() {
+
+    public MainFigures() throws IOException {
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -143,16 +149,42 @@ public class MainFigures extends JFrame implements ActionListener, ItemListener 
             //  System.out.println(figure.toString() + " instatce " + figure.getClass().getName());
             if (figure instanceof CPoint) {
                 masPoint[countPoint++] = (CPoint) figure;
-                print(figure);
+                //  print(figure);
             }
         }
+
+
+        try {
+
+            fileOutputStreamX = new FileOutputStream("res" + File.separator + "sourceX.txt");
+
+
+            for (Figure figure : masFig) {
+                if (figure instanceof CPoint) {
+                    if (figure.getClass().getName().equals("CPoint")) {
+                        fileOutputStreamX.write(((CPoint) figure).getX());
+                        fileOutputStreamX.write(((CPoint) figure).getY());
+                    }
+                }
+            }
+
+            fileOutputStreamX.flush();
+
+
+        } finally {
+
+            if (fileOutputStreamX != null) {
+                fileOutputStreamX.close();
+            }
+        }
+
 
         int countLine = 0;
         masLines = new CLine[masFig.length];
         for (Figure figure : masFig) {
             if (figure instanceof CLine) {
                 masLines[countLine++] = (CLine) figure;
-                print(figure);
+                // print(figure);
             }
         }
 
@@ -161,7 +193,7 @@ public class MainFigures extends JFrame implements ActionListener, ItemListener 
         for (Figure figure : masFig) {
             if (figure instanceof TriangleClass) {
                 masTri[countTriangle++] = (TriangleClass) figure;
-                print(figure);
+                //print(figure);
             }
         }
 
@@ -172,7 +204,7 @@ public class MainFigures extends JFrame implements ActionListener, ItemListener 
             //print(figure);
             if (figure instanceof ColorAble) {
                 masColor[countColorAble++] = (ColorAble) figure;
-                print(figure);
+                // print(figure);
             }
         }
 
@@ -210,15 +242,66 @@ public class MainFigures extends JFrame implements ActionListener, ItemListener 
         panelCheckBox.add(colorFigireChk);
         colorFigireChk.addItemListener(this);
 
+        System.out.println("X = ");
+        try {
+            fileInputStreamX = new FileInputStream("res" + File.separator + "sourceX.txt");
+            int c;
+            while ((c = fileInputStreamX.read()) != -1) {
+                System.out.println(c);
+            }
+        } finally {
+            if (fileInputStreamX != null) {
+                try {
+                    fileInputStreamX.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
         panelFigurePaint = new JPanel() {
             public void paint(Graphics g) {
+
+                try {
+                    fileInputStreamX = new FileInputStream("res" + File.separator + "sourceX.txt");
+                    byte [] x = new byte[4];
+                    byte [] y = new byte[4];
+//                    int c;
+                    while (fileInputStreamX.read(x, 0, 4) != 0) {
+                        fileInputStreamX.read(y, 0, 4);
+                        
+
+                    }
+//                    while ((c = fileInputStreamX.read()) != -1) {
+//                        //g.fillOval(masPoint[i].getX(), masPoint[i].getY(), 5, 5);
+//
+//                        for (int i = 0; i < cp; i++) {
+//                            masPoint[i].setX(c);
+//                        }
+//                    }
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } finally {
+                    if (fileInputStreamX != null) {
+                        try {
+                            fileInputStreamX.close();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+
+
 
                 if (pointChk.isSelected()) {
                     for (int i = 0; i < cp; i++) {
                         if (masPoint[i].getClass().getName() == "CPoint") {
                             g.setColor(Color.BLACK);
-                            if (masPoint[i] != null)
+                            if (masPoint[i] != null) {
                                 g.fillOval(masPoint[i].getX(), masPoint[i].getY(), 5, 5);
+                            }
                         }
                     }
                 }
@@ -285,12 +368,13 @@ public class MainFigures extends JFrame implements ActionListener, ItemListener 
         setVisible(true);
     }
 
+
     public static void print(Figure fig) {
-//        if (fig.getClass().getName().equals("CPoint")) // возвращает строку
-//            if (fig instanceof CPoint) // ртти динамическое приведение
-//                System.out.println("This Point X = " + ((CPoint) fig).getX());
-//            else
-        fig.display();
+        if (fig.getClass().getName().equals("CPoint")) // возвращает строку
+            if (fig instanceof CPoint) // ртти динамическое приведение
+                System.out.println("This Point X = " + ((CPoint) fig).getX());
+            else
+                fig.display();
     }
 
     @Override
@@ -360,7 +444,11 @@ public class MainFigures extends JFrame implements ActionListener, ItemListener 
 
         EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new MainFigures();
+                try {
+                    new MainFigures();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         });
     }
