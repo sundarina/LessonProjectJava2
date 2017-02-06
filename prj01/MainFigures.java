@@ -109,9 +109,17 @@ public class MainFigures extends JFrame implements ActionListener, ItemListener 
     ColorAble[] masColor;
 
     FileInputStream fileInputStreamX = null;
-    FileInputStream fileInputStreamY = null;
-    FileOutputStream fileOutputStreamY = null;
     FileOutputStream fileOutputStreamX = null;
+    FileWriter writer = null;
+    FileReader reader = null;
+
+
+    String pathCPoint = "res" + File.separator + "CPoint.txt";
+    String pathCcoloredPoint = "res" + File.separator + "CcoloredPoint.txt";
+    String pathCLine = "res" + File.separator + "CLine.txt";
+    String pathCcoloredLine = "res" + File.separator + "CcoloredLine.txt";
+    String pathTriangle = "res" + File.separator + "TriangleClass.txt";
+    String pathColorTriangle = "res" + File.separator + "ColorTriangle.txt";
 
 
     public MainFigures() throws IOException {
@@ -121,7 +129,7 @@ public class MainFigures extends JFrame implements ActionListener, ItemListener 
 
         AbstractFigureFabric simpleFigureFabric = new AllFigureFabric();
 
-        masFig = new Figure[20]; /*
+        masFig = new Figure[10]; /*
                                              * обьединение под общим
 											 * интерфейсом, каждый из обьектов
 											 * содержит метод, описаный в
@@ -145,38 +153,39 @@ public class MainFigures extends JFrame implements ActionListener, ItemListener 
 
         int countPoint = 0;
         masPoint = new CPoint[masFig.length];
+
         for (Figure figure : masFig) {
-            //  System.out.println(figure.toString() + " instatce " + figure.getClass().getName());
             if (figure instanceof CPoint) {
                 masPoint[countPoint++] = (CPoint) figure;
-                //  print(figure);
+                //if (figure instanceof CPoint)
+                figureWriter("CPoint", pathCPoint);
             }
         }
 
 
-        try {
-
-            fileOutputStreamX = new FileOutputStream("res" + File.separator + "sourceX.txt");
-
-
-            for (Figure figure : masFig) {
-                if (figure instanceof CPoint) {
-                    if (figure.getClass().getName().equals("CPoint")) {
-                        fileOutputStreamX.write(((CPoint) figure).getX());
-                        fileOutputStreamX.write(((CPoint) figure).getY());
-                    }
-                }
-            }
-
-            fileOutputStreamX.flush();
-
-
-        } finally {
-
-            if (fileOutputStreamX != null) {
-                fileOutputStreamX.close();
-            }
-        }
+//        try {
+//
+//            fileOutputStreamX = new FileOutputStream("res" + File.separator + "sourceX.txt");
+//
+//
+//            for (Figure figure : masFig) {
+//                if (figure instanceof CPoint) {
+//                    if (figure.getClass().getName().equals("CPoint")) {
+//                        fileOutputStreamX.write(((CPoint) figure).getX());
+//                       // fileOutputStreamX.write(((CPoint) figure).getY());
+//                    }
+//                }
+//            }
+//
+//            fileOutputStreamX.flush();
+//
+//
+//        } finally {
+//
+//            if (fileOutputStreamX != null) {
+//                fileOutputStreamX.close();
+//            }
+//        }
 
 
         int countLine = 0;
@@ -184,7 +193,8 @@ public class MainFigures extends JFrame implements ActionListener, ItemListener 
         for (Figure figure : masFig) {
             if (figure instanceof CLine) {
                 masLines[countLine++] = (CLine) figure;
-                // print(figure);
+                // if (figure instanceof CLine)
+                figureWriter("CLine", pathCLine);
             }
         }
 
@@ -193,18 +203,22 @@ public class MainFigures extends JFrame implements ActionListener, ItemListener 
         for (Figure figure : masFig) {
             if (figure instanceof TriangleClass) {
                 masTri[countTriangle++] = (TriangleClass) figure;
-                //print(figure);
+                // if (figure instanceof TriangleClass)
+                figureWriter("TriangleClass", pathTriangle);
             }
         }
 
         int countColorAble = 0;
         masColor = new ColorAble[masFig.length];
         for (Figure figure : masFig) {
-            // System.out.println(figure.toString() + " instatce " + figure.getClass().getName());
-            //print(figure);
             if (figure instanceof ColorAble) {
                 masColor[countColorAble++] = (ColorAble) figure;
-                // print(figure);
+                if (figure instanceof CcoloredPoint)
+                    figureWriter("CcoloredPoint", pathCcoloredPoint);
+                if (figure instanceof CcoloredLine)
+                    figureWriter("CcoloredLine", pathCcoloredLine);
+                if (figure instanceof ColorTriangle)
+                    figureWriter("ColorTriangle", pathColorTriangle);
             }
         }
 
@@ -242,36 +256,18 @@ public class MainFigures extends JFrame implements ActionListener, ItemListener 
         panelCheckBox.add(colorFigireChk);
         colorFigireChk.addItemListener(this);
 
-        System.out.println("X = ");
-        try {
-            fileInputStreamX = new FileInputStream("res" + File.separator + "sourceX.txt");
-            int c;
-            while ((c = fileInputStreamX.read()) != -1) {
-                System.out.println(c);
-            }
-        } finally {
-            if (fileInputStreamX != null) {
-                try {
-                    fileInputStreamX.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
 
         panelFigurePaint = new JPanel() {
             public void paint(Graphics g) {
-
-                try {
-                    fileInputStreamX = new FileInputStream("res" + File.separator + "sourceX.txt");
-                    byte [] x = new byte[4];
-                    byte [] y = new byte[4];
+//
+//                try {
+//                    fileInputStreamX = new FileInputStream("res" + File.separator + "CPoint.txt");
+////                    byte [] x = new byte[4];
+////                    byte [] y = new byte[4];
 //                    int c;
-                    while (fileInputStreamX.read(x, 0, 4) != 0) {
-                        fileInputStreamX.read(y, 0, 4);
-                        
-
-                    }
+////                    while (fileInputStreamX.read(x, 0, 4) != 0) {
+////                        fileInputStreamX.read(y, 0, 4);
+////                    }
 //                    while ((c = fileInputStreamX.read()) != -1) {
 //                        //g.fillOval(masPoint[i].getX(), masPoint[i].getY(), 5, 5);
 //
@@ -279,25 +275,29 @@ public class MainFigures extends JFrame implements ActionListener, ItemListener 
 //                            masPoint[i].setX(c);
 //                        }
 //                    }
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } finally {
-                    if (fileInputStreamX != null) {
-                        try {
-                            fileInputStreamX.close();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
-
+//                } catch (FileNotFoundException e) {
+//                    e.printStackTrace();
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                } finally {
+//                    if (fileInputStreamX != null) {
+//                        try {
+//                            fileInputStreamX.close();
+//                        } catch (IOException e) {
+//                            e.printStackTrace();
+//                        }
+//                    }
+//                }
 
 
                 if (pointChk.isSelected()) {
+                    try {
+                        figureReader("CPoint", pathCPoint, cp);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                     for (int i = 0; i < cp; i++) {
-                        if (masPoint[i].getClass().getName() == "CPoint") {
+                        if (masPoint[i].getClass().getName().equals("CPoint")) {
                             g.setColor(Color.BLACK);
                             if (masPoint[i] != null) {
                                 g.fillOval(masPoint[i].getX(), masPoint[i].getY(), 5, 5);
@@ -308,7 +308,7 @@ public class MainFigures extends JFrame implements ActionListener, ItemListener 
 
                 if (lineChk.isSelected()) {
                     for (int i = 0; i < cl; i++) {
-                        if (masLines[i].getClass().getName() == "CLine") {
+                        if (masLines[i].getClass().getName().equals("CLine")) {
                             g.setColor(Color.BLACK);
                             if (masLines[i] != null)
                                 g.drawLine(masLines[i].getStart().getX(), masLines[i].getStart().getY(), masLines[i].getEnd().getX(), masLines[i].getEnd().getY());
@@ -318,7 +318,7 @@ public class MainFigures extends JFrame implements ActionListener, ItemListener 
 
                 if (triangleChk.isSelected()) {
                     for (int i = 0; i < ct; i++) {
-                        if (masTri[i].getClass().getName() == "TriangleClass") {
+                        if (masTri[i].getClass().getName().equals("TriangleClass")) {
                             g.setColor(Color.BLACK);
                             if (masTri[i] != null)
                                 g.drawPolygon(new int[]{masTri[i].getApexA().getX(), masTri[i].getApexB().getX(), masTri[i].getApexC().getX()}, new int[]{masTri[i].getApexA().getY(), masTri[i].getApexB().getY(), masTri[i].getApexC().getY()}, 3);
@@ -326,9 +326,15 @@ public class MainFigures extends JFrame implements ActionListener, ItemListener 
                     }
                 }
 
+
                 for (int i = 0; i < cc; i++) {
                     if (colorPointChk.isSelected()) {
-                        if (masColor[i].getClass().getName() == "CcoloredPoint") {
+                        try {
+                            figureReader("CcoloredPoint", pathCcoloredPoint, cc);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        if (masColor[i].getClass().getName().equals("CcoloredPoint")) {
                             g.setColor(new Color(masColor[i].getColorR(), masColor[i].getColorG(), masColor[i].getColorB()));
                             if (masPoint[i] != null)
                                 g.fillOval(masPoint[i].getX(), masPoint[i].getY(), 5, 5);
@@ -336,7 +342,7 @@ public class MainFigures extends JFrame implements ActionListener, ItemListener 
                     }
 
                     if (colorLineChk.isSelected()) {
-                        if (masColor[i].getClass().getName() == "CcoloredLine") {
+                        if (masColor[i].getClass().getName().equals("CcoloredLine")) {
                             g.setColor(new Color(masColor[i].getColorR(), masColor[i].getColorG(), masColor[i].getColorB()));
                             if (masLines[i] != null)
                                 g.drawLine(masLines[i].getStart().getX(), masLines[i].getStart().getY(), masLines[i].getEnd().getX(), masLines[i].getEnd().getY());
@@ -345,7 +351,7 @@ public class MainFigures extends JFrame implements ActionListener, ItemListener 
 
                     if (colorTriangleChk.isSelected()) {
 
-                        if (masColor[i].getClass().getName() == "ColorTriangle") {
+                        if (masColor[i].getClass().getName().equals("ColorTriangle")) {
                             g.setColor(new Color(masColor[i].getColorR(), masColor[i].getColorG(), masColor[i].getColorB()));
                             if (masTri[i] != null)
                                 g.drawPolygon(new int[]{masTri[i].getApexA().getX(), masTri[i].getApexB().getX(), masTri[i].getApexC().getX()}, new int[]{masTri[i].getApexA().getY(), masTri[i].getApexB().getY(), masTri[i].getApexC().getY()}, 3);
@@ -370,11 +376,7 @@ public class MainFigures extends JFrame implements ActionListener, ItemListener 
 
 
     public static void print(Figure fig) {
-        if (fig.getClass().getName().equals("CPoint")) // возвращает строку
-            if (fig instanceof CPoint) // ртти динамическое приведение
-                System.out.println("This Point X = " + ((CPoint) fig).getX());
-            else
-                fig.display();
+        fig.display();
     }
 
     @Override
@@ -403,7 +405,6 @@ public class MainFigures extends JFrame implements ActionListener, ItemListener 
 
 
         if (itemEvent.getItemSelectable() == pointChk) {
-            pointChk.setVisible(true);
             panelFigurePaint.setVisible(visible);
             panelFigurePaint.repaint();
         }
@@ -438,6 +439,80 @@ public class MainFigures extends JFrame implements ActionListener, ItemListener 
         }
     }
 
+
+    public void figureWriter(String figureName, String path) throws IOException {
+
+        writer = new FileWriter(path);
+        try {
+            for (Figure figure : masFig) {
+                if (figure instanceof CPoint) {
+                    if (figure.getClass().getName().equals(figureName)) {
+                        writer.write(((CPoint) figure).getX() + "," + ((CPoint) figure).getY() + "\n");
+                    }
+                }
+
+                if (figure instanceof CLine) {
+                    if (figure.getClass().getName().equals(figureName)) {
+                        writer.write(((CLine) figure).getStart().getX() + ", " + ((CLine) figure).getStart().getY() + " " + ((CLine) figure).getEnd().getX() + "," + ((CLine) figure).getEnd().getY() + "\n");
+                    }
+                }
+
+                if (figure instanceof TriangleClass) {
+                    if (figure.getClass().getName().equals(figureName)) {
+                        writer.write(((TriangleClass) figure).getApexA().getX() + "," + ((TriangleClass) figure).getApexB().getX() + "," + ((TriangleClass) figure).getApexC().getX() + " " + ((TriangleClass) figure).getApexA().getY() + "," + ((TriangleClass) figure).getApexB().getY() + "," + ((TriangleClass) figure).getApexC().getY() + "\n");
+                    }
+                }
+            }
+            writer.flush();
+        } finally {
+            if (writer != null) {
+                writer.close();
+            }
+        }
+    }
+
+
+    public void figureReader(String figureName, String path, int counter) throws IOException {
+        BufferedReader reader = new BufferedReader(new FileReader(path));
+        String line;
+        int x = 0;
+        int y = 0;
+        while ((line = reader.readLine()) != null) {
+            String[] space = line.split(" ");
+
+            for (int i = 0; i < space.length; i++) {
+                String[] mas = space[i].split(",");
+
+                for (int j = 0; j < mas.length; j++) {
+                    for (Figure figure : masFig) {
+                        if (figure.getClass().getName().equals(figureName)) {
+                            if (figure instanceof CPoint) {
+                                x = Integer.parseInt(mas[0]);
+                                y = Integer.parseInt(mas[1]);
+                                for (int k = 0; k < counter; k++) {
+//                              if (masFig.getClass().getName().equals(figureName))
+                                     masColor[k].setX(x);
+                                     masColor[k].setY(y);
+                                }
+
+//
+//                        if (figure.getClass().getName().equals(figureName)) {
+//                        if(figureName.equals("CPoint"))
+
+//                              if(masLines.getClass().getName().equals(figureName)) {
+//                                   masLines[k].setStart(new CPoint(x, y));
+//                                   masLines[k].setEnd(new CPoint(x,y));
+//
+//                                  }
+                            }
+                        }
+                    }
+                }
+            }
+
+        }
+        reader.close();
+    }
 
     public static void main(String[] args) {
         // MainFigures mainFigures = new MainFigures();
