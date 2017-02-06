@@ -153,7 +153,6 @@ public class MainFigures extends JFrame implements ActionListener, ItemListener 
 
         int countPoint = 0;
         masPoint = new CPoint[masFig.length];
-
         for (Figure figure : masFig) {
             if (figure instanceof CPoint) {
                 masPoint[countPoint++] = (CPoint) figure;
@@ -300,11 +299,27 @@ public class MainFigures extends JFrame implements ActionListener, ItemListener 
                         if (masPoint[i].getClass().getName().equals("CPoint")) {
                             g.setColor(Color.BLACK);
                             if (masPoint[i] != null) {
-                                g.fillOval(masPoint[i].getX(), masPoint[i].getY(), 5, 5);
+                                g.fillOval(masPoint[i].getX(), masPoint[i].getY(), 10, 10);
                             }
                         }
                     }
                 }
+
+
+//                if (pointChk.isSelected()) {
+//                    try {
+//                        figureReader("CPoint", pathCPoint, cp);
+//                        for (int i = 0; i < cp; i++) {
+//                            g.setColor(Color.BLACK);
+//                            if (masPoint[i] != null) {
+//                                g.fillOval(masPoint[i].getX(), masPoint[i].getY(), 10, 10);
+//                            }
+//                        }
+//                    } catch (IOException e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+
 
                 if (lineChk.isSelected()) {
                     for (int i = 0; i < cl; i++) {
@@ -337,7 +352,7 @@ public class MainFigures extends JFrame implements ActionListener, ItemListener 
                         if (masColor[i].getClass().getName().equals("CcoloredPoint")) {
                             g.setColor(new Color(masColor[i].getColorR(), masColor[i].getColorG(), masColor[i].getColorB()));
                             if (masPoint[i] != null)
-                                g.fillOval(masPoint[i].getX(), masPoint[i].getY(), 5, 5);
+                                g.fillOval(masPoint[i].getX(), masPoint[i].getY(), 10, 10);
                         }
                     }
 
@@ -359,18 +374,25 @@ public class MainFigures extends JFrame implements ActionListener, ItemListener 
                     }
                 }
             }
-        };
+        }
+
+        ;
 
 
-        panelButton.add(clear, new FlowLayout());
+        panelButton.add(clear, new
+
+                FlowLayout());
         clear.addActionListener(this);
 
         add(panelFigurePaint, BorderLayout.CENTER);
+
         add(panelButton, BorderLayout.SOUTH);
+
         add(panelCheckBox, BorderLayout.NORTH);
 
         setSize(1000, 1000);
         panelFigurePaint.setVisible(false);
+
         setVisible(true);
     }
 
@@ -485,17 +507,32 @@ public class MainFigures extends JFrame implements ActionListener, ItemListener 
 
                 for (int j = 0; j < mas.length; j++) {
                     for (Figure figure : masFig) {
-                        if (figure.getClass().getName().equals(figureName)) {
-                            if (figure instanceof CPoint) {
+                        if (figure instanceof CPoint) {
+                            if (figure.getClass().getName().equals(figureName)) { //выбор именно того обьекта, для которого сработал метод
                                 x = Integer.parseInt(mas[0]);
                                 y = Integer.parseInt(mas[1]);
                                 for (int k = 0; k < counter; k++) {
-//                              if (masFig.getClass().getName().equals(figureName))
-                                     masColor[k].setX(x);
-                                     masColor[k].setY(y);
+                                    masPoint[k].setX(x);
+                                    masPoint[k].setY(y);
                                 }
+                            }
+                        }
+                    }
+                }
+//                for (int j = 0; j < mas.length; j++) {
+//                    for (Figure figure : masFig) {
+//                        if (figure instanceof CcoloredPoint) {
+//                            // if (figureName.equals("CcoloredPoint")) {
+//                            x = Integer.parseInt(mas[0]);
+//                            y = Integer.parseInt(mas[1]);
+//                            for (int k = 0; k < counter; k++) {
+//                                masPoint[k].setX(x);
+//                                masPoint[k].setY(y);
+//                            }
+//                        }
+//                    }
 
-//
+
 //                        if (figure.getClass().getName().equals(figureName)) {
 //                        if(figureName.equals("CPoint"))
 
@@ -504,13 +541,13 @@ public class MainFigures extends JFrame implements ActionListener, ItemListener 
 //                                   masLines[k].setEnd(new CPoint(x,y));
 //
 //                                  }
-                            }
-                        }
-                    }
-                }
-            }
 
+
+
+            }
         }
+
+
         reader.close();
     }
 
