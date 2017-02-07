@@ -49,11 +49,11 @@ class ColorFigureFabric extends AbstractFigureFabric {
     }
 }
 
-class AllFigureFabric extends AbstractFigureFabric {
+class SimpleFigureFabric extends AbstractFigureFabric {
 
 
     public Figure rand() {
-        return getFigure((int) (Math.random() * 6));
+        return getFigure((int) (Math.random() * 3));
     }
 
     /**
@@ -76,12 +76,6 @@ class AllFigureFabric extends AbstractFigureFabric {
             case 1:
                 return new CLine((int) (Math.random() * 250), (int) (Math.random() * 250), (int) (Math.random() * 800), (int) (Math.random() * 800));
             case 2:
-                return new CcoloredPoint((int) (Math.random() * 250), (int) (Math.random() * 800), this.randColor());
-            case 3:
-                return new CcoloredLine((int) (Math.random() * 250), (int) (Math.random() * 250), (int) (Math.random() * 800), (int) (Math.random() * 800), this.randColor());
-            case 4:
-                return new ColorTriangle(new CPoint((int) (Math.random() * 250), (int) (Math.random() * 800)), new CPoint((int) (Math.random() * 250), (int) (Math.random() * 800)), new CPoint((int) (Math.random() * 250), (int) (Math.random() * 800)), this.randColor());
-            case 5:
                 return new TriangleClass(new CPoint((int) (Math.random() * 50), (int) (Math.random() * 800)), new CPoint((int) (Math.random() * 50), (int) (Math.random() * 800)), new CPoint((int) (Math.random() * 50), (int) (Math.random() * 800)));
             default:
                 return null;
@@ -92,59 +86,55 @@ class AllFigureFabric extends AbstractFigureFabric {
 
 public class MainFigures extends JFrame implements ActionListener, ItemListener {
 
+    private JPanel panelCheckBox;
+    private JPanel panelFigurePaint;
+    private JPanel panelButton;
 
-    String path = "res" + File.separator + "source.txt";
+    private JButton clear;
+    private JCheckBox pointChk, colorPointChk, lineChk, colorLineChk, triangleChk, colorTriangleChk;
 
-    JPanel panelCheckBox;
-    JPanel panelFigurePaint;
-    JPanel panelButton;
+    private Figure[] masFig;
+    private CPoint[] masPoint;
+    private CLine[] masLines;
+    private TriangleClass[] masTri;
+    private ColorAble[] masColor;
+    private CcoloredPoint[] masColorPoint;
+    private ColorTriangle[] masColorTriangle;
+    private CcoloredLine[] masColorLine;
 
-    JButton rePaint, clear;
-    JCheckBox pointChk, colorPointChk, lineChk, colorLineChk, triangleChk, colorTriangleChk, colorFigireChk;
-
-    Figure[] masFig;
-    CPoint[] masPoint;
-    CLine[] masLines;
-    TriangleClass[] masTri;
-    ColorAble[] masColor;
-
-    FileInputStream fileInputStreamX = null;
-    FileOutputStream fileOutputStreamX = null;
     FileWriter writer = null;
-    FileReader reader = null;
 
-
-    String pathCPoint = "res" + File.separator + "CPoint.txt";
-    String pathCcoloredPoint = "res" + File.separator + "CcoloredPoint.txt";
-    String pathCLine = "res" + File.separator + "CLine.txt";
-    String pathCcoloredLine = "res" + File.separator + "CcoloredLine.txt";
-    String pathTriangle = "res" + File.separator + "TriangleClass.txt";
-    String pathColorTriangle = "res" + File.separator + "ColorTriangle.txt";
+    private String pathCPoint = "res" + File.separator + "CPoint.txt";
+    private String pathCcoloredPoint = "res" + File.separator + "CcoloredPoint.txt";
+    private String pathCLine = "res" + File.separator + "CLine.txt";
+    private String pathCcoloredLine = "res" + File.separator + "CcoloredLine.txt";
+    private String pathTriangle = "res" + File.separator + "TriangleClass.txt";
+    private String pathColorTriangle = "res" + File.separator + "ColorTriangle.txt";
 
 
     public MainFigures() throws IOException {
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
+        AbstractFigureFabric simpleFigureFabric = new SimpleFigureFabric();
+        AbstractFigureFabric colorFigureFabric = new ColorFigureFabric();
 
-        AbstractFigureFabric simpleFigureFabric = new AllFigureFabric();
+ /* обьединение под общим интерфейсом, каждый из обьектов содержит метод, описаный в интерф.
+  класс обязан выполнить контракт - реализов метод*/
 
-        masFig = new Figure[10]; /*
-                                             * обьединение под общим
-											 * интерфейсом, каждый из обьектов
-											 * содержит метод, описаный в
-											 * интерф. который обьеденяет всех.
-											 * класс обязан выполнить контракт -
-											 * реализов метод
-											 */
-
-
+        masFig = new Figure[10];
         for (int i = 0; i < masFig.length; i++) {
             masFig[i] = simpleFigureFabric.rand();
             System.out.print(masFig[i]);
             System.out.print("\n");
         }
 
+        masColor = new ColorAble[10];
+        for (int i = 0; i < masColor.length; i++) {
+            masColor[i] = (ColorAble) colorFigureFabric.rand();
+            System.out.print(masColor[i]);
+            System.out.print("\n");
+        }
 
 //		masCPoint[0] = ccp1; // реализация полиморфизма. ссылка и родительского
 //								// класса, засовывать можно и этот класс и
@@ -156,43 +146,15 @@ public class MainFigures extends JFrame implements ActionListener, ItemListener 
         for (Figure figure : masFig) {
             if (figure instanceof CPoint) {
                 masPoint[countPoint++] = (CPoint) figure;
-                //if (figure instanceof CPoint)
                 figureWriter("CPoint", pathCPoint);
             }
         }
-
-
-//        try {
-//
-//            fileOutputStreamX = new FileOutputStream("res" + File.separator + "sourceX.txt");
-//
-//
-//            for (Figure figure : masFig) {
-//                if (figure instanceof CPoint) {
-//                    if (figure.getClass().getName().equals("CPoint")) {
-//                        fileOutputStreamX.write(((CPoint) figure).getX());
-//                       // fileOutputStreamX.write(((CPoint) figure).getY());
-//                    }
-//                }
-//            }
-//
-//            fileOutputStreamX.flush();
-//
-//
-//        } finally {
-//
-//            if (fileOutputStreamX != null) {
-//                fileOutputStreamX.close();
-//            }
-//        }
-
 
         int countLine = 0;
         masLines = new CLine[masFig.length];
         for (Figure figure : masFig) {
             if (figure instanceof CLine) {
                 masLines[countLine++] = (CLine) figure;
-                // if (figure instanceof CLine)
                 figureWriter("CLine", pathCLine);
             }
         }
@@ -202,30 +164,42 @@ public class MainFigures extends JFrame implements ActionListener, ItemListener 
         for (Figure figure : masFig) {
             if (figure instanceof TriangleClass) {
                 masTri[countTriangle++] = (TriangleClass) figure;
-                // if (figure instanceof TriangleClass)
                 figureWriter("TriangleClass", pathTriangle);
             }
         }
 
-        int countColorAble = 0;
-        masColor = new ColorAble[masFig.length];
-        for (Figure figure : masFig) {
-            if (figure instanceof ColorAble) {
-                masColor[countColorAble++] = (ColorAble) figure;
-                if (figure instanceof CcoloredPoint)
-                    figureWriter("CcoloredPoint", pathCcoloredPoint);
-                if (figure instanceof CcoloredLine)
-                    figureWriter("CcoloredLine", pathCcoloredLine);
-                if (figure instanceof ColorTriangle)
-                    figureWriter("ColorTriangle", pathColorTriangle);
-            }
+        int countColorPoint = 0;
+        masColorPoint = new CcoloredPoint[masColor.length];
+        for (ColorAble colorAble : masColor) {
+            if (colorAble instanceof CcoloredPoint)
+                masColorPoint[countColorPoint++] = (CcoloredPoint) colorAble;
+            figureWriter("CcoloredPoint", pathCcoloredPoint);
         }
+
+        int countColorLine = 0;
+        masColorLine = new CcoloredLine[masColor.length];
+        for (ColorAble colorAble : masColor) {
+            if (colorAble instanceof CcoloredLine)
+                masColorLine[countColorLine++] = (CcoloredLine) colorAble;
+            figureWriter("CcoloredLine", pathCcoloredLine);
+
+        }
+
+        int countColorTriangle = 0;
+        masColorTriangle = new ColorTriangle[masColor.length];
+        for (ColorAble colorAble : masColor) {
+            if (colorAble instanceof ColorTriangle)
+                masColorTriangle[countColorTriangle++] = (ColorTriangle) colorAble;
+            figureWriter("ColorTriangle", pathColorTriangle);
+        }
+
 
         final int cp = countPoint;
         final int cl = countLine;
         final int ct = countTriangle;
-        final int cc = countColorAble;
-
+        final int ccp = countColorPoint;
+        final int ccl = countColorLine;
+        final int cct = countColorTriangle;
 
         panelButton = new JPanel();
         panelCheckBox = new JPanel();
@@ -237,7 +211,6 @@ public class MainFigures extends JFrame implements ActionListener, ItemListener 
         colorLineChk = new JCheckBox("Color Line");
         triangleChk = new JCheckBox("Triangle");
         colorTriangleChk = new JCheckBox("Color Triangle");
-        colorFigireChk = new JCheckBox("Color Figure");
 
         panelCheckBox.setLayout(new GridLayout(1, 7));
         panelCheckBox.add(pointChk);
@@ -252,8 +225,6 @@ public class MainFigures extends JFrame implements ActionListener, ItemListener 
         triangleChk.addItemListener(this);
         panelCheckBox.add(colorTriangleChk);
         colorTriangleChk.addItemListener(this);
-        panelCheckBox.add(colorFigireChk);
-        colorFigireChk.addItemListener(this);
 
 
         panelFigurePaint = new JPanel() {
@@ -296,92 +267,88 @@ public class MainFigures extends JFrame implements ActionListener, ItemListener 
                         e.printStackTrace();
                     }
                     for (int i = 0; i < cp; i++) {
-                        if (masPoint[i].getClass().getName().equals("CPoint")) {
-                            g.setColor(Color.BLACK);
-                            if (masPoint[i] != null) {
-                                g.fillOval(masPoint[i].getX(), masPoint[i].getY(), 10, 10);
-                            }
+                        g.setColor(Color.BLACK);
+                        if (masPoint[i] != null) {
+                            g.fillOval(masPoint[i].getX(), masPoint[i].getY(), 10, 10);
                         }
                     }
                 }
 
 
-//                if (pointChk.isSelected()) {
-//                    try {
-//                        figureReader("CPoint", pathCPoint, cp);
-//                        for (int i = 0; i < cp; i++) {
-//                            g.setColor(Color.BLACK);
-//                            if (masPoint[i] != null) {
-//                                g.fillOval(masPoint[i].getX(), masPoint[i].getY(), 10, 10);
-//                            }
-//                        }
-//                    } catch (IOException e) {
-//                        e.printStackTrace();
-//                    }
-//                }
-
-
                 if (lineChk.isSelected()) {
+                    try {
+                        figureReader("CLine", pathCLine, cl);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                     for (int i = 0; i < cl; i++) {
-                        if (masLines[i].getClass().getName().equals("CLine")) {
-                            g.setColor(Color.BLACK);
-                            if (masLines[i] != null)
-                                g.drawLine(masLines[i].getStart().getX(), masLines[i].getStart().getY(), masLines[i].getEnd().getX(), masLines[i].getEnd().getY());
-                        }
+                        g.setColor(Color.BLACK);
+                        if (masLines[i] != null)
+                            g.drawLine(masLines[i].getStart().getX(), masLines[i].getStart().getY(), masLines[i].getEnd().getX(), masLines[i].getEnd().getY());
                     }
                 }
 
                 if (triangleChk.isSelected()) {
+                    try {
+                        figureReader("TriangleClass", pathTriangle, ct);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                     for (int i = 0; i < ct; i++) {
-                        if (masTri[i].getClass().getName().equals("TriangleClass")) {
-                            g.setColor(Color.BLACK);
-                            if (masTri[i] != null)
-                                g.drawPolygon(new int[]{masTri[i].getApexA().getX(), masTri[i].getApexB().getX(), masTri[i].getApexC().getX()}, new int[]{masTri[i].getApexA().getY(), masTri[i].getApexB().getY(), masTri[i].getApexC().getY()}, 3);
-                        }
+                        g.setColor(Color.BLACK);
+                        if (masTri[i] != null)
+                            g.drawPolygon(new int[]{masTri[i].getApexA().getX(), masTri[i].getApexB().getX(), masTri[i].getApexC().getX()}, new int[]{masTri[i].getApexA().getY(), masTri[i].getApexB().getY(), masTri[i].getApexC().getY()}, 3);
                     }
                 }
 
 
-                for (int i = 0; i < cc; i++) {
-                    if (colorPointChk.isSelected()) {
-                        try {
-                            figureReader("CcoloredPoint", pathCcoloredPoint, cc);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                        if (masColor[i].getClass().getName().equals("CcoloredPoint")) {
-                            g.setColor(new Color(masColor[i].getColorR(), masColor[i].getColorG(), masColor[i].getColorB()));
-                            if (masPoint[i] != null)
-                                g.fillOval(masPoint[i].getX(), masPoint[i].getY(), 10, 10);
-                        }
+                if (colorPointChk.isSelected()) {
+                    try {
+                        figureReader("CcoloredPoint", pathCcoloredPoint, ccp);
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
-
-                    if (colorLineChk.isSelected()) {
-                        if (masColor[i].getClass().getName().equals("CcoloredLine")) {
-                            g.setColor(new Color(masColor[i].getColorR(), masColor[i].getColorG(), masColor[i].getColorB()));
-                            if (masLines[i] != null)
-                                g.drawLine(masLines[i].getStart().getX(), masLines[i].getStart().getY(), masLines[i].getEnd().getX(), masLines[i].getEnd().getY());
-                        }
+                    for (int i = 0; i < ccp; i++) {
+                        g.setColor(new Color(masColorPoint[i].getColorR(), masColorPoint[i].getColorG(), masColorPoint[i].getColorB()));
+                        if (masColorPoint[i] != null)
+                            g.fillOval(masColorPoint[i].getX(), masColorPoint[i].getY(), 10, 10);
                     }
+                }
 
-                    if (colorTriangleChk.isSelected()) {
 
-                        if (masColor[i].getClass().getName().equals("ColorTriangle")) {
-                            g.setColor(new Color(masColor[i].getColorR(), masColor[i].getColorG(), masColor[i].getColorB()));
+                if (colorLineChk.isSelected()) {
+                    try {
+                        figureReader("CcoloredLine", pathCcoloredLine, ccl);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    for (int i = 0; i < ccl; i++) {
+                        g.setColor(new Color(masColorLine[i].getColorR(), masColorLine[i].getColorG(), masColorLine[i].getColorB()));
+                        if (masLines[i] != null)
+                            g.drawLine(masColorLine[i].getStart().getX(), masColorLine[i].getStart().getY(), masColorLine[i].getEnd().getX(), masColorLine[i].getEnd().getY());
+                    }
+                }
+
+                if (colorTriangleChk.isSelected()) {
+
+                    try {
+                        figureReader("ColorTriangle", pathColorTriangle, cct);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    for (int i = 0; i < cct; i++) {
+                        if (masColorTriangle[i].getClass().getName().equals("ColorTriangle")) {
+                            g.setColor(new Color(masColorTriangle[i].getColorR(), masColorTriangle[i].getColorG(), masColorTriangle[i].getColorB()));
                             if (masTri[i] != null)
-                                g.drawPolygon(new int[]{masTri[i].getApexA().getX(), masTri[i].getApexB().getX(), masTri[i].getApexC().getX()}, new int[]{masTri[i].getApexA().getY(), masTri[i].getApexB().getY(), masTri[i].getApexC().getY()}, 3);
+                                g.drawPolygon(new int[]{masColorTriangle[i].getApexA().getX(), masColorTriangle[i].getApexB().getX(), masColorTriangle[i].getApexC().getX()}, new int[]{masColorTriangle[i].getApexA().getY(), masColorTriangle[i].getApexB().getY(), masColorTriangle[i].getApexC().getY()}, 3);
                         }
                     }
                 }
             }
-        }
-
-        ;
+        };
 
 
-        panelButton.add(clear, new
-
-                FlowLayout());
+        panelButton.add(clear, new FlowLayout());
         clear.addActionListener(this);
 
         add(panelFigurePaint, BorderLayout.CENTER);
@@ -410,7 +377,6 @@ public class MainFigures extends JFrame implements ActionListener, ItemListener 
             colorLineChk.setSelected(false);
             triangleChk.setSelected(false);
             colorTriangleChk.setSelected(false);
-            colorFigireChk.setSelected(false);
             panelCheckBox.repaint();
         }
     }
@@ -455,10 +421,6 @@ public class MainFigures extends JFrame implements ActionListener, ItemListener 
             panelFigurePaint.setVisible(visible);
             panelFigurePaint.repaint();
         }
-        if (itemEvent.getItemSelectable() == colorFigireChk) {
-            panelFigurePaint.setVisible(visible);
-            panelFigurePaint.repaint();
-        }
     }
 
 
@@ -485,6 +447,28 @@ public class MainFigures extends JFrame implements ActionListener, ItemListener 
                     }
                 }
             }
+
+            for (ColorAble colorAble : masColor) {
+                if (colorAble instanceof CcoloredPoint) {
+                    if (colorAble.getClass().getName().equals(figureName)) {
+                        writer.write(((CcoloredPoint) colorAble).getX() + "," + ((CcoloredPoint) colorAble).getY() + "\n");
+                    }
+                }
+
+                if (colorAble instanceof CcoloredLine) {
+                    if (colorAble.getClass().getName().equals(figureName)) {
+                        writer.write(((CcoloredLine) colorAble).getStart().getX() + ", " + ((CcoloredLine) colorAble).getStart().getY() + " " + ((CcoloredLine) colorAble).getEnd().getX() + "," + ((CcoloredLine) colorAble).getEnd().getY() + "\n");
+                    }
+                }
+
+                if (colorAble instanceof TriangleClass) {
+                    if (colorAble.getClass().getName().equals(figureName)) {
+                        writer.write(((ColorTriangle) colorAble).getApexA().getX() + "," + ((ColorTriangle) colorAble).getApexB().getX() + "," + ((ColorTriangle) colorAble).getApexC().getX() + " " + ((ColorTriangle) colorAble).getApexA().getY() + "," + ((ColorTriangle) colorAble).getApexB().getY() + "," + ((ColorTriangle) colorAble).getApexC().getY() + "\n");
+                    }
+                }
+
+
+            }
             writer.flush();
         } finally {
             if (writer != null) {
@@ -497,57 +481,132 @@ public class MainFigures extends JFrame implements ActionListener, ItemListener 
     public void figureReader(String figureName, String path, int counter) throws IOException {
         BufferedReader reader = new BufferedReader(new FileReader(path));
         String line;
-        int x = 0;
-        int y = 0;
+
         while ((line = reader.readLine()) != null) {
             String[] space = line.split(" ");
+            String[] mas = space[0].split(",");
+            if (space.length > 1) {
+                String[] mas1 = space[1].split(",");
 
-            for (int i = 0; i < space.length; i++) {
-                String[] mas = space[i].split(",");
-
-                for (int j = 0; j < mas.length; j++) {
-                    for (Figure figure : masFig) {
-                        if (figure instanceof CPoint) {
-                            if (figure.getClass().getName().equals(figureName)) { //выбор именно того обьекта, для которого сработал метод
-                                x = Integer.parseInt(mas[0]);
-                                y = Integer.parseInt(mas[1]);
-                                for (int k = 0; k < counter; k++) {
-                                    masPoint[k].setX(x);
-                                    masPoint[k].setY(y);
-                                }
-                            }
+                for (Figure figure : masFig) {
+                    if (figure instanceof CPoint) {
+                        CPoint p = (CPoint) figure;
+                        if (figure.getClass().getName().equals(figureName)) {
+                            int x = 0;
+                            int y = 0;
+                            x = Integer.parseInt(mas[0]);
+                            y = Integer.parseInt(mas[1]);
+                            p.setX(x);
+                            p.setY(y);
                         }
                     }
+
+                    if (figure instanceof CLine) {
+                        CLine l = (CLine) figure;
+                        if (figure.getClass().getName().equals(figureName)) {
+
+                            int x = 0;
+                            int y = 0;
+                            int x1 = 0;
+                            int y1 = 0;
+
+                            x = Integer.parseInt(mas[0]);
+                            y = Integer.parseInt(mas[1]);
+
+                            x1 = Integer.parseInt(mas1[0]);
+                            y1 = Integer.parseInt(mas1[1]);
+
+                            l.setStart(new CPoint(x, y));
+                            l.setEnd(new CPoint(x1, y1));
+                        }
+                    }
+
+                    if (figure instanceof TriangleClass) {
+                        TriangleClass t = (TriangleClass) figure;
+                        if (figure.getClass().getName().equals(figureName)) { 
+
+                            int x = 0;
+                            int y = 0;
+                            int x1 = 0;
+                            int y1 = 0;
+                            int x2 = 0;
+                            int y2 = 0;
+
+                            x = Integer.parseInt(mas[0]);
+                            x1 = Integer.parseInt(mas[1]);
+                            x2 = Integer.parseInt(mas[2]);
+
+                            y = Integer.parseInt(mas1[0]);
+                            y1 = Integer.parseInt(mas1[1]);
+                            y2 = Integer.parseInt(mas1[2]);
+
+                            t.setApexA(new CPoint(x, y));
+                            t.setApexB(new CPoint(x1, y1));
+                            t.setApexC(new CPoint(x2, y2));
+                        }
+                    }
+                    break;
                 }
-//                for (int j = 0; j < mas.length; j++) {
-//                    for (Figure figure : masFig) {
-//                        if (figure instanceof CcoloredPoint) {
-//                            // if (figureName.equals("CcoloredPoint")) {
-//                            x = Integer.parseInt(mas[0]);
-//                            y = Integer.parseInt(mas[1]);
-//                            for (int k = 0; k < counter; k++) {
-//                                masPoint[k].setX(x);
-//                                masPoint[k].setY(y);
-//                            }
-//                        }
-//                    }
 
 
-//                        if (figure.getClass().getName().equals(figureName)) {
-//                        if(figureName.equals("CPoint"))
+                for (ColorAble colorAble : masColor) {
+                    if (colorAble instanceof CcoloredPoint) {
+                        CcoloredPoint cc = (CcoloredPoint) colorAble;
+                        if (colorAble.getClass().getName().equals(figureName)) {
+                            int x = 0;
+                            int y = 0;
+                            x = Integer.parseInt(mas[0]);
+                            y = Integer.parseInt(mas[1]);
+                            cc.setX(x);
+                            cc.setY(y);
+                        }
+                    }
 
-//                              if(masLines.getClass().getName().equals(figureName)) {
-//                                   masLines[k].setStart(new CPoint(x, y));
-//                                   masLines[k].setEnd(new CPoint(x,y));
-//
-//                                  }
+                    if (colorAble instanceof CcoloredLine) {
+                        CcoloredLine cl = (CcoloredLine) colorAble;
+                        if (colorAble.getClass().getName().equals(figureName)) {
+                            int x = 0;
+                            int y = 0;
+                            int x1 = 0;
+                            int y1 = 0;
 
+                            x = Integer.parseInt(mas[0]);
+                            y = Integer.parseInt(mas[1]);
+                            x1 = Integer.parseInt(mas1[0]);
+                            y1 = Integer.parseInt(mas1[1]);
+                            cl.setStart(new CPoint(x, y));
+                            cl.setEnd(new CPoint(x1, y1));
+                        }
+                    }
 
+                    if (colorAble instanceof ColorTriangle) {
+                        ColorTriangle ct = (ColorTriangle) colorAble;
+                        if (colorAble.getClass().getName().equals(figureName)) { //выбор именно того обьекта, для которого сработал метод
 
+                            int x = 0;
+                            int y = 0;
+                            int x1 = 0;
+                            int y1 = 0;
+                            int x2 = 0;
+                            int y2 = 0;
+
+                            x = Integer.parseInt(mas[0]);
+                            x1 = Integer.parseInt(mas[1]);
+                            x2 = Integer.parseInt(mas[2]);
+
+                            y = Integer.parseInt(mas1[0]);
+                            y1 = Integer.parseInt(mas1[1]);
+                            y2 = Integer.parseInt(mas1[2]);
+
+                            ct.setApexA(new CPoint(x, y));
+                            ct.setApexB(new CPoint(x1, y1));
+                            ct.setApexC(new CPoint(x2, y2));
+                        }
+                    }
+                    break;
+                }
             }
         }
-
-
         reader.close();
     }
 
