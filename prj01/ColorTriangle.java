@@ -1,5 +1,6 @@
+import java.io.Serializable;
 
-public class ColorTriangle extends TriangleClass implements Figure, ColorAble {
+public class ColorTriangle extends TriangleClass implements Figure, ColorAble, Serializable {
 
     private int[] color = new int[3];
 

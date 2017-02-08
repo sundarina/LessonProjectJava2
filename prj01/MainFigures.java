@@ -229,36 +229,6 @@ public class MainFigures extends JFrame implements ActionListener, ItemListener 
 
         panelFigurePaint = new JPanel() {
             public void paint(Graphics g) {
-//
-//                try {
-//                    fileInputStreamX = new FileInputStream("res" + File.separator + "CPoint.txt");
-////                    byte [] x = new byte[4];
-////                    byte [] y = new byte[4];
-//                    int c;
-////                    while (fileInputStreamX.read(x, 0, 4) != 0) {
-////                        fileInputStreamX.read(y, 0, 4);
-////                    }
-//                    while ((c = fileInputStreamX.read()) != -1) {
-//                        //g.fillOval(masPoint[i].getX(), masPoint[i].getY(), 5, 5);
-//
-//                        for (int i = 0; i < cp; i++) {
-//                            masPoint[i].setX(c);
-//                        }
-//                    }
-//                } catch (FileNotFoundException e) {
-//                    e.printStackTrace();
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                } finally {
-//                    if (fileInputStreamX != null) {
-//                        try {
-//                            fileInputStreamX.close();
-//                        } catch (IOException e) {
-//                            e.printStackTrace();
-//                        }
-//                    }
-//                }
-
 
                 if (pointChk.isSelected()) {
                     try {
@@ -385,16 +355,21 @@ public class MainFigures extends JFrame implements ActionListener, ItemListener 
     public void itemStateChanged(ItemEvent itemEvent) {
         boolean visible = true;
 
-        if (itemEvent.getStateChange() == ItemEvent.DESELECTED) {
-            visible = false;
-        } else {
-            visible = true;
+        if (itemEvent.getSource() == pointChk) {
+            if (itemEvent.getStateChange() == ItemEvent.DESELECTED) {
+              //  panelFigurePaint.repaint();
+                visible = false;
+            } else {
+                visible = true;
+            }
         }
-
 
         if (itemEvent.getItemSelectable() == pointChk) {
             panelFigurePaint.setVisible(visible);
             panelFigurePaint.repaint();
+//        } else {
+//            pointChk.setSelected(false);
+//            panelFigurePaint.repaint();
         }
 
         if (itemEvent.getItemSelectable() == colorPointChk) {
@@ -523,7 +498,7 @@ public class MainFigures extends JFrame implements ActionListener, ItemListener 
 
                     if (figure instanceof TriangleClass) {
                         TriangleClass t = (TriangleClass) figure;
-                        if (figure.getClass().getName().equals(figureName)) { 
+                        if (figure.getClass().getName().equals(figureName)) {
 
                             int x = 0;
                             int y = 0;
