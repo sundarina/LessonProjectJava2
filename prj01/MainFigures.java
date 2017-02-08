@@ -523,7 +523,7 @@ public class MainFigures extends JFrame implements ActionListener, ItemListener 
 
                     if (figure instanceof TriangleClass) {
                         TriangleClass t = (TriangleClass) figure;
-                        if (figure.getClass().getName().equals(figureName)) { 
+                        if (figure.getClass().getName().equals(figureName)) {
 
                             int x = 0;
                             int y = 0;
