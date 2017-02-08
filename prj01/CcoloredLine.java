@@ -1,5 +1,6 @@
+import java.io.Serializable;
 
-public class CcoloredLine extends CLine implements Figure, ColorAble {
+public class CcoloredLine extends CLine implements Figure, ColorAble, Serializable {
 
     private int[] color = new int[3];
 

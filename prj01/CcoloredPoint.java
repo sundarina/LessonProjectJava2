@@ -1,6 +1,6 @@
+import java.io.Serializable;
 
-
-public class CcoloredPoint extends CPoint implements Figure, ColorAble {
+public class CcoloredPoint extends CPoint implements Figure, ColorAble, Serializable {
 
     private int[] color = new int[3];
 

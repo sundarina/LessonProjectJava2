@@ -1,5 +1,6 @@
+import java.io.Serializable;
 
-public class CLine implements Figure {
+public class CLine implements Figure, Serializable {
 
     private CPoint start;
     private CPoint end;

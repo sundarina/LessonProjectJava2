@@ -38,11 +38,11 @@ class ColorFigureFabric extends AbstractFigureFabric {
     public Figure getFigure(int n) { //метод, что будет возвращать какуюто фигуру
         switch (n) {
             case 0:
-                return new CcoloredPoint((int) (Math.random() * 250), (int) (Math.random() * 800), this.randColor());
+                return new CcoloredPoint((int) (Math.random() * 250), (int) (Math.random() * 700), this.randColor());
             case 1:
-                return new CcoloredLine((int) (Math.random() * 250), 5, (int) (Math.random() * 250), (int) (Math.random() * 800), this.randColor());
+                return new CcoloredLine((int) (Math.random() * 250), 5, (int) (Math.random() * 250), (int) (Math.random() * 700), this.randColor());
             case 2:
-                return new ColorTriangle(new CPoint((int) (Math.random() * 250), (int) (Math.random() * 800)), new CPoint((int) (Math.random() * 250), (int) (Math.random() * 800)), new CPoint((int) (Math.random() * 250), (int) (Math.random() * 800)), this.randColor());
+                return new ColorTriangle(new CPoint((int) (Math.random() * 250), (int) (Math.random() * 700)), new CPoint((int) (Math.random() * 250), (int) (Math.random() * 700)), new CPoint((int) (Math.random() * 250), (int) (Math.random() * 700)), this.randColor());
             default:
                 return null;
         }
@@ -72,11 +72,11 @@ class SimpleFigureFabric extends AbstractFigureFabric {
     public Figure getFigure(int n) { //метод, что будет возвращать какуюто фигуру
         switch (n) {
             case 0:
-                return new CPoint((int) (Math.random() * 250), (int) (Math.random() * 800));
+                return new CPoint((int) (Math.random() * 250), (int) (Math.random() * 700));
             case 1:
-                return new CLine((int) (Math.random() * 250), (int) (Math.random() * 250), (int) (Math.random() * 800), (int) (Math.random() * 800));
+                return new CLine((int) (Math.random() * 250), (int) (Math.random() * 250), (int) (Math.random() * 700), (int) (Math.random() * 700));
             case 2:
-                return new TriangleClass(new CPoint((int) (Math.random() * 50), (int) (Math.random() * 800)), new CPoint((int) (Math.random() * 50), (int) (Math.random() * 800)), new CPoint((int) (Math.random() * 50), (int) (Math.random() * 800)));
+                return new TriangleClass(new CPoint((int) (Math.random() * 250), (int) (Math.random() * 250)), new CPoint((int) (Math.random() * 250), (int) (Math.random() * 700)), new CPoint((int) (Math.random() * 250), (int) (Math.random() * 700)));
             default:
                 return null;
         }
@@ -229,36 +229,6 @@ public class MainFigures extends JFrame implements ActionListener, ItemListener 
 
         panelFigurePaint = new JPanel() {
             public void paint(Graphics g) {
-//
-//                try {
-//                    fileInputStreamX = new FileInputStream("res" + File.separator + "CPoint.txt");
-////                    byte [] x = new byte[4];
-////                    byte [] y = new byte[4];
-//                    int c;
-////                    while (fileInputStreamX.read(x, 0, 4) != 0) {
-////                        fileInputStreamX.read(y, 0, 4);
-////                    }
-//                    while ((c = fileInputStreamX.read()) != -1) {
-//                        //g.fillOval(masPoint[i].getX(), masPoint[i].getY(), 5, 5);
-//
-//                        for (int i = 0; i < cp; i++) {
-//                            masPoint[i].setX(c);
-//                        }
-//                    }
-//                } catch (FileNotFoundException e) {
-//                    e.printStackTrace();
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                } finally {
-//                    if (fileInputStreamX != null) {
-//                        try {
-//                            fileInputStreamX.close();
-//                        } catch (IOException e) {
-//                            e.printStackTrace();
-//                        }
-//                    }
-//                }
-
 
                 if (pointChk.isSelected()) {
                     try {
@@ -357,7 +327,7 @@ public class MainFigures extends JFrame implements ActionListener, ItemListener 
 
         add(panelCheckBox, BorderLayout.NORTH);
 
-        setSize(1000, 1000);
+        setSize(800, 800);
         panelFigurePaint.setVisible(false);
 
         setVisible(true);
@@ -385,16 +355,21 @@ public class MainFigures extends JFrame implements ActionListener, ItemListener 
     public void itemStateChanged(ItemEvent itemEvent) {
         boolean visible = true;
 
-        if (itemEvent.getStateChange() == ItemEvent.DESELECTED) {
-            visible = false;
-        } else {
-            visible = true;
+        if (itemEvent.getSource() == pointChk) {
+            if (itemEvent.getStateChange() == ItemEvent.DESELECTED) {
+              //  panelFigurePaint.repaint();
+                visible = false;
+            } else {
+                visible = true;
+            }
         }
-
 
         if (itemEvent.getItemSelectable() == pointChk) {
             panelFigurePaint.setVisible(visible);
             panelFigurePaint.repaint();
+//        } else {
+//            pointChk.setSelected(false);
+//            panelFigurePaint.repaint();
         }
 
         if (itemEvent.getItemSelectable() == colorPointChk) {
@@ -437,7 +412,7 @@ public class MainFigures extends JFrame implements ActionListener, ItemListener 
 
                 if (figure instanceof CLine) {
                     if (figure.getClass().getName().equals(figureName)) {
-                        writer.write(((CLine) figure).getStart().getX() + ", " + ((CLine) figure).getStart().getY() + " " + ((CLine) figure).getEnd().getX() + "," + ((CLine) figure).getEnd().getY() + "\n");
+                        writer.write(((CLine) figure).getStart().getX() + "," + ((CLine) figure).getStart().getY() + " " + ((CLine) figure).getEnd().getX() + "," + ((CLine) figure).getEnd().getY() + "\n");
                     }
                 }
 
@@ -457,7 +432,7 @@ public class MainFigures extends JFrame implements ActionListener, ItemListener 
 
                 if (colorAble instanceof CcoloredLine) {
                     if (colorAble.getClass().getName().equals(figureName)) {
-                        writer.write(((CcoloredLine) colorAble).getStart().getX() + ", " + ((CcoloredLine) colorAble).getStart().getY() + " " + ((CcoloredLine) colorAble).getEnd().getX() + "," + ((CcoloredLine) colorAble).getEnd().getY() + "\n");
+                        writer.write(((CcoloredLine) colorAble).getStart().getX() + "," + ((CcoloredLine) colorAble).getStart().getY() + " " + ((CcoloredLine) colorAble).getEnd().getX() + "," + ((CcoloredLine) colorAble).getEnd().getY() + "\n");
                     }
                 }
 
